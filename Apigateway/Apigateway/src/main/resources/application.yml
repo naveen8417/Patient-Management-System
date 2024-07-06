@@ -1,0 +1,32 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    eureka:
+      instance:
+        hostname: localhost
+        port: 8888
+      client:
+        serviceUrl:
+          defaultZone: http://localhost:8888/eureka/
+ 
+services:
+  - name: API-GATEWAY
+    status: UP
+    instances:
+      - id: api-gateway
+        status: UP
+        address: 192.168.56.1
+        port: 8888
+ 
+
+login:
+  page:
+    url: http://localhost:8888/management/
+    
+jwt:
+  secret: nXHXClQ2YNMdn8fD+j3sbDNXGUK0jt3ThOzpglMtTRw=
+    

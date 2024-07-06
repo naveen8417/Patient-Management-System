@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/">
+
+<head>
+    <title>Patient Edit Page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        /* Customize scrollbar */
+        .modal-body {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+        body{
+			background-color: white;
+		}
+    </style>
+</head>
+
+<body>
+
+    <!-- Modal -->
+    <div class="modal fade" id="editPatientModal" tabindex="-1" role="dialog" aria-labelledby="editPatientModalLabel"
+        aria-hidden="true" >
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white" style="background-color: white;">
+                    <h5 class="modal-title" id="editPatientModalLabel">DOCTOR EDIT PAGE</h5>
+                </div>
+                <div class="modal-body" style="background-color: white;">
+                    <form th:action="@{/doctors/update}" method="POST" th:object="${patient}">
+                        <div class="form-row">
+                            <!-- Doctor fields -->
+                            <div class="form-group col-md-6">
+                                <label for="doctorId">Doctor ID:</label>
+                                <input type="text" th:field="*{doctorid}" class="form-control" readonly/>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="doctorName">Doctor Name:</label>
+                                <input type="text" th:field="*{doctorname}" class="form-control" required />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="email">Email:</label>
+                                <input type="email" th:field="*{doctoremail}" class="form-control" required />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="phoneNo">Phone No:</label>
+                                <input type="text" th:field="*{doctorphoneno}" class="form-control" required />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="address">Address:</label>
+                                <textarea th:field="*{address}" class="form-control" required></textarea>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="specialisation">Specialisation:</label>
+                                <input type="text" th:field="*{specialisation}" class="form-control" required />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="availability">Availability:</label>
+                                <textarea th:field="*{availability}" class="form-control" required></textarea>
+                            </div>
+                            <!-- End of Doctor fields -->
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="redirectToPatientList()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Automatically show modal when page loads
+        $(document).ready(function () {
+            $('#editPatientModal').modal('show');
+        });
+    </script>
+    <script>
+        // Redirect to patientlist.html when the modal is closed
+        function redirectToPatientList() {
+            window.location.href = "http://localhost:8888/doctors/";
+        }
+    </script>
+
+</body>
+
+</html>
