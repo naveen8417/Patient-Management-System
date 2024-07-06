@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .navbar {
+            overflow: hidden;
+            background-color: deepskyblue;
+        }
+
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+
+        .navbar a:hover {
+            background-color: steelblue;
+            color: white;
+        }
+
+        .navbar a.active {
+            background-color: steelblue;
+            color: white;
+        }
+
+        .navbar-dropdown {
+            float: left;
+            overflow: hidden;
+        }
+
+        .navbar-dropdown .dropbtn {
+            font-size: 16px;  
+            border: none;
+            outline: none;
+            color: white;
+            padding: 14px 20px;
+            background-color: inherit;
+            margin: 0;
+        }
+
+        .navbar-dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: deepskyblue;
+            min-width: 160px;
+            z-index: 1;
+        }
+
+        .navbar-dropdown-content a {
+            float: none;
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+
+        .navbar-dropdown-content a:hover {
+            background-color: steelblue;
+        }
+
+        .navbar-dropdown:hover .navbar-dropdown-content {
+            display: block;
+        }
+
+        .navbar-dropdown:hover .dropbtn {
+            background-color: steelblue;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            background-color: deepskyblue;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            margin-top: 0;
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        input[type="text"] {
+            width: 150px;
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            background-color: light;
+            padding: 10px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+           background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg>');
+background-position: center;
+background-repeat: no-repeat;
+
+            background-size: 20px 20px;
+            background-repeat: no-repeat;
+            padding: 0 20px;
+            background-color: deepskyblue;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+        /* Add this CSS to style the user badge */
+/* Add this CSS to style the blue navbar */
+.navbar {
+    background-color: deepskyblue;
+    overflow: hidden;
+}
+
+/* Add this CSS to style the welcome badge and navbar container */
+.header-container {
+    display: flex;
+    align-items: center;
+    background-color: deepskyblue;
+    padding: 10px;
+}
+
+/* Add this CSS to style the user badge */
+/* Add this CSS to style the user badge */
+/* Add this CSS to style the user badge */
+.user-badge {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.user-badge img {
+    width: 20px; /* Adjust the width as needed */
+    height: 20px; /* Adjust the height as needed */
+    margin-right: 10px;
+}
+
+.user-badge p {
+    margin: 0;
+    font-size: 10px;
+    color: #333333;
+    display: flex; /* Add this line */
+    align-items: center; /* Add this line */
+}
+
+
+    </style>
+</head>
+<body>
+	
+<div class="navbar">
+	 <div class="header-container" style="background-color: #f2f2f2;">
+        <!-- Welcome badge -->
+        <div id="welcomeBadge" class="user-badge">
+          
+            <p style="font-size: medium;"  id="welcomeMessage">  <img src="https://static-00.iconduck.com/assets.00/user-icon-1024x1024-dtzturco.png">Welcome, <span id="name">example@example.com</span>!</p>
+        </div>
+
+        <!-- Navbar -->
+        <!-- Your existing navbar code here -->
+    </div>
+    <a class="active" href="http://localhost:8888/disease/">Disease Status</a>
+    <a href="http://localhost:8888/patient/">User Registration</a>
+    <div class="navbar-dropdown">
+        <button class="dropbtn" onclick="showDoctorDropdown()">Doctor</button>
+       <div class="navbar-dropdown-content" id="doctorDropdownContent" style="display: none;">
+            <a href="http://localhost:8888/doctor/">Doctor Precaution</a>
+            <a href="http://localhost:8888/doctors/">Doctor Registration</a>
+        </div>
+    </div>
+    <div class="navbar-dropdown">
+        <button class="dropbtn">Appointment</button>
+        <div class="navbar-dropdown-content">
+            <a href="http://localhost:8888/user/index">Booking Appointment</a>
+            <a href="http://localhost:8888/user/userList">Appointment Status</a>
+        </div>
+    </div>
+    <div style="margin-left: auto;">
+        <a href="http://localhost:8888/management/" style="margin-right: 10px;float: right;">Logout</a>
+        <i class="bi bi-arrow-left-square-fill"></i>
+    </div>
+</div>
+ 
+
+
+  <div class="container">
+        <div style="display: flex; justify-content: center;">
+            <form action="index1" method="get" onsubmit="return validateForm()">
+                <label for="diseaseid" style="margin-top:7px;">User ID</label>
+                <!-- Input field to display the user ID from the URL -->
+                <input type="text" id="diseaseid" name="diseaseid" readonly>
+                <input type="submit" value="">
+            </form>
+        </div>
+
+    </div>
+
+    <div style="background-color: deepskyblue;height: 30px; color: white;text-align: center;font-size: 25px;">Patient Health Details</div>
+
+    <form action="/index1" method="post" onsubmit="return validateForm()" style="display: flex; flex-wrap: wrap;">
+        <div class="table-responsive" style="flex: 1; margin-right: 20px;">
+            <table class="table">
+                <tr>
+                    <td>Patient ID</td>
+                    <td><input type="text" id="userid" name="userid" class="form-control" th:value="${id}" readonly></td>
+                </tr>
+                <tr>
+                    <td>Patient Name</td>
+                    <td><input type="text" id="patientName" name="patientName" class="form-control" th:value="${name}" readonly></td>
+                </tr>
+                 <tr>
+                    <td>Patient Gender</td>
+                    <td><input type="text" id="patientemail" name="patientemail" class="form-control" th:value="${email}" readonly></td>
+                </tr>
+                 <tr>
+                    <td>Patient Phoneno</td>
+                    <td><input type="text" id="phoneno" name="phoneno" class="form-control" th:value="${phoneno}" readonly></td>
+                </tr>
+                 <tr>
+                    <td>Patient Blood Group</td>
+                    <td><input type="text" id="bloodGroup" name="bloodGroup" class="form-control" th:value="${bloodGroup}" readonly></td>
+                </tr>
+                 <tr>
+                    <td>Age</td>
+                    <td><input type="text" id="age" name="age" class="form-control" th:value="${age}" readonly></td>
+                </tr>
+                <tr>
+                    <td>Doctor ID</td>
+                    <td><input type="text" id="doctorid" name="doctorid" class="form-control" th:value="${doctorid}" readonly></td>
+                </tr>
+                 <tr>
+                    <td>Doctor Name</td>
+                    <td><input type="text" id="doctorName" name="doctorName" class="form-control" th:value="${doctorname}" readonly></td>
+                </tr>
+                 <tr>
+                    <td>Doctor Email</td>
+                    <td><input type="text" id="doctoremail" name="doctoremail" class="form-control" th:value="${doctoremail}" readonly></td>
+                </tr>
+                 <tr>
+                    <td>Doctor PhoneNo</td>
+                    <td><input type="text" id="doctorphoneno" name="doctorphoneno" class="form-control" th:value="${doctorphoneno}" readonly></td>
+                </tr>
+                
+            </table>
+        </div>
+
+        <div class="table-responsive" style="flex: 1;">
+            <table class="table">
+				<tr>
+                    <td>BP</td>
+                    <td><input type="text" id="BP" name="BP" class="form-control" th:value="${BP}" readonly></td>
+                </tr>
+                <tr>
+                    <td>Sugar</td>
+                    <td><input type="text" id="Sugar" name="Sugar" class="form-control" th:value="${Sugar}" readonly></td>
+                </tr>
+                <tr>
+                    <td>Disease</td>
+                    <td><input type="text" id="disease" name="disease" class="form-control" th:value="${disease1}" readonly></td>
+                </tr>
+                <tr>
+                    <td>Health Condition</td>
+                    <td><textarea id="healthcondition" name="healthcondition" class="form-control" readonly th:text="${healthcondition} "style="height:100px"></textarea>
+</td>
+                </tr>
+                <tr>
+                    <td>Precaution</td>
+                    <td><textarea id="precaution" name="precaution" class="form-control" readonly th:text="${precaution}" style="height:100px"></textarea>
+</td>
+                </tr><br>
+                
+                <tr>
+                    <td>RegistrationDate</td>
+                    <td><input type="text" id="date" name="date" class="form-control" th:value="${date}" readonly></td>
+                </tr>
+                <tr>
+                    <td>RegistrationTime</td>
+                    <td><input type="text" id="time" name="time" class="form-control" th:value="${time}" readonly></td>
+                </tr>
+            </table>
+        </div>
+    </form>
+</div>
+
+<script>
+	function showDoctorDropdown() {
+    var password = prompt("Enter password:");
+    if (password === "1234") {
+        // Password is correct, show the doctor dropdown
+        var doctorDropdownContent = document.getElementById("doctorDropdownContent");
+        doctorDropdownContent.style.display = "block";
+    } else {
+        // Password is incorrect, show an error message
+        alert("Invalid password. Please try again.");
+    }
+}
+
+    function validateForm() {
+        var diseaseField = document.getElementById("disease").value;
+        if (diseaseField.trim() === "") {
+            alert("Please enter the details for disease management.");
+            return false; // Prevent form submission
+        }
+        return true; // Allow form submission
+    }
+   
+  function validateForm() {
+    var diseaseIdField = document.getElementById("diseaseid").value;
+    
+    // Check if the input is empty
+    if (diseaseIdField.trim() === "") {
+        alert("Please enter a user ID.");
+        return false; // Prevent form submission
+    }
+    
+    // Check if the input is exactly four digits
+    if (!/^\d{4}$/.test(diseaseIdField.trim())) {
+        alert("Please enter a four-digit user ID.");
+        return false; // Prevent form submission
+    }
+    
+    // If both checks pass, allow form submission
+    return true;
+}
+
+// Function to display welcome message with a hardcoded email
+// Function to display welcome message with user's email
+function displayWelcomeMessage() {
+    // Fetch user's ID from URL parameter
+    const userId = new URLSearchParams(window.location.search).get('userId');
+    if (!userId) return; // If userId is null, exit the function
+
+    // Fetch user's details via AJAX
+    fetch(`http://localhost:8888/management/details?id=${userId}`)
+        .then(response => response.json())
+        .then(data => {
+            // Extract user's name and email from the response data
+            const name = data.name;
+            const email = data.email; // Assuming email is present in the response data
+
+            // Update user's name and email in the welcome message
+            const nameElement = document.getElementById('name');
+            nameElement.textContent = name;
+
+            const emailElement = document.getElementById('email');
+            emailElement.textContent = email;
+
+            // Display the welcome badge after setting the name and email
+            const welcomeBadge = document.getElementById('welcomeBadge');
+            welcomeBadge.style.display = 'block';
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+
+// Call the function to display welcome message when the page loads
+window.onload = function() {
+    displayWelcomeMessage();
+};
+
+
+  function populateUserID() {
+            // Extracting user ID from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('userId');
+
+            // Populating the input field with the user ID
+            document.getElementById('diseaseid').value = userId;
+        }
+
+        // Call the function to populate the user ID field when the page loads
+        window.onload = function() {
+            populateUserID();
+        };
+
+
+
+
+
+</script>
+</body>
+</html>

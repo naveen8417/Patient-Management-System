@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>User Home</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+	<button class="btn btn-danger" th:onclick="'window.location.href = \'/index\''">Logout</button>
+	<div class="container p-5">
+		<div class="row">
+			<div class="col-md-6 offset-md-3">
+				<div class="card">
+					<div class="card-body">
+						<form id="resetPasswordForm">
+							<div class="mb-3">
+								<label>Email</label>
+								<input type="email" name="email" class="form-control" value="naveenjk8417@gmail.com">
+							</div>
+							<div class="mb-3">
+								<label>New Password</label>
+								<input type="password" name="newpassword" class="form-control">
+							</div>
+							<button type="submit" class="btn btn-primary col-md-12">Reset</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const form = document.getElementById('resetPasswordForm');
+			form.addEventListener('submit', function (event) {
+				event.preventDefault();
+				const formData = new FormData(form);
+				const email = formData.get('email');
+				const newPassword = formData.get('newpassword');
+
+				fetch(`http://localhost:8083/set-password?email=${email}&newpassword=${newPassword}`, {
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+				})
+					.then(response => {
+						if (!response.ok) {
+							throw new Error('Failed to reset password');
+						}
+						alert('Password reset successful');
+					})
+					.catch(error => {
+						console.error('Error resetting password:', error.message);
+						alert('An error occurred while resetting password');
+					});
+			});
+		});
+	</script>
+</body>
+
+</html>

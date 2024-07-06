@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            max-width: 800px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        td button {
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        td button.admin-access {
+            background-color: #007bff;
+        }
+
+        td button:hover {
+            background-color: #cc0000;
+        }
+
+        td button:focus {
+            outline: none;
+        }
+
+        td button:active {
+            background-color: #990000;
+        }
+
+        td button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .search-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .search-container input[type=text] {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 200px;
+            box-sizing: border-box;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            margin: 0 5px;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .pagination button.active {
+            background-color: #007bff;
+            color: #fff;
+            border: 1px solid #007bff;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Email List</h1>
+    <div class="search-container">
+        <input type="text" id="searchInput" onkeyup="searchEmails()" placeholder="Search for emails...">
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Delete</th>
+                <th>Role</th>
+                <th>Update</th>
+            </tr>
+        </thead>
+        <tbody id="emailList">
+            <!-- Emails will be dynamically added here -->
+        </tbody>
+    </table>
+    <div class="pagination" id="pagination">
+        <!-- Pagination buttons will be dynamically added here -->
+    </div>
+
+    <script>
+        const PAGE_SIZE = 5; // Number of emails per page
+        let currentPage = 1; // Current page number
+        let totalEmails = 0; // Total number of emails
+
+        // Function to fetch email data from backend API
+        async function fetchEmailData() {
+            try {
+                const response = await fetch('http://localhost:8888/management/all'); // Assuming your backend API endpoint is '/all'
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error fetching email data:', error);
+                return []; // Return an empty array in case of error
+            }
+        }
+
+        // Function to dynamically generate the email list from fetched data
+        async function generateEmailList(page) {
+            const emailList = document.getElementById("emailList");
+            emailList.innerHTML = ""; // Clear existing list
+
+            try {
+                const emails = await fetchEmailData(); // Fetch email data from backend
+                totalEmails = emails.length;
+
+                const startIndex = (page - 1) * PAGE_SIZE;
+                const endIndex = startIndex + PAGE_SIZE;
+                const paginatedEmails = emails.slice(startIndex, endIndex);
+
+                paginatedEmails.forEach((entry, index) => {
+                    const row = document.createElement("tr");
+
+                    // ID column
+                    const idCell = document.createElement("td");
+                    idCell.textContent = entry.id;
+
+                    // Email column
+                    const emailCell = document.createElement("td");
+                    emailCell.textContent = entry.email;
+
+                    // Delete button
+                   const deleteButton = createButton("Delete", () => deleteUserByEmail(entry.email)); // Pass the email as an argument
+
+                    // Role dropdown
+                    const roleDropdown = createRoleDropdown(entry.role, (role) => changeRole(index, role));
+
+                    // Update button
+                    const updateButton = createButton("Update", () => updateRole(index));
+
+                    // Append cells to row
+                    row.appendChild(idCell);
+                    row.appendChild(emailCell);
+                    row.appendChild(createTableCell(deleteButton));
+                    row.appendChild(createTableCell(roleDropdown));
+                    row.appendChild(createTableCell(updateButton));
+
+                    // Append row to table body
+                    emailList.appendChild(row);
+                });
+
+                // Update pagination
+                updatePagination(page);
+            } catch (error) {
+                console.error('Error generating email list:', error);
+            }
+        }
+
+        // Function to create a table cell
+        function createTableCell(content) {
+            const cell = document.createElement("td");
+            cell.appendChild(content);
+            return cell;
+        }
+
+        // Function to create a button
+        function createButton(text, onclick) {
+            const button = document.createElement("button");
+            button.textContent = text;
+            button.onclick = onclick;
+            return button;
+        }
+
+        // Function to create role dropdown
+        function createRoleDropdown(selectedRole, onchange) {
+            const dropdown = document.createElement("select");
+            const roles = ["admin", "doctor", "user"];
+
+            roles.forEach(role => {
+                const option = document.createElement("option");
+                option.value = role;
+                option.textContent = role.charAt(0).toUpperCase() + role.slice(1);
+                if (role === selectedRole) {
+                    option.selected = true;
+                }
+                dropdown.appendChild(option);
+            });
+
+            dropdown.onchange = function () {
+                onchange(dropdown.value);
+            };
+
+            return dropdown;
+        }
+
+        // Function to delete an email from the list
+        function deleteEmail(index) {
+            // Implement delete logic here
+            generateEmailList(currentPage); // Regenerate the email list for the current page
+        }
+
+   function updateRole(index) {
+    // Retrieve the email and role from the corresponding table cells
+    const email = document.getElementById('emailList').rows[index].cells[1].textContent;
+    const role = document.getElementById('emailList').rows[index].cells[3].querySelector('select').value;
+
+    // Construct the new URL with parameters
+    const updateUrl = `http://localhost:8888/management/update?email=${encodeURIComponent(email)}&role=${encodeURIComponent(role)}`;
+
+    // Make an AJAX request to update the role
+    fetch(updateUrl, {
+        method: 'POST', // Assuming you're using POST method to update the role
+        // Add other necessary headers and body if needed
+    })
+    .then(response => {
+        if (response.ok) {
+            // If update is successful, display alert and redirect to admin page
+            window.alert('Updated successfully');
+            window.location.href = 'http://localhost:8888/management/admin';
+        } else {
+            console.error('Failed to update role:', response.statusText);
+            // Handle error if needed
+        }
+    })
+    .catch(error => {
+        console.error('Error updating role:', error);
+        // Handle error if needed
+    });
+}
+
+
+
+function deleteUserByEmail(email) {
+    fetch(`http://localhost:8888/management/delete?email=${encodeURIComponent(email)}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('User deleted successfully');
+            window.alert('User deleted successfully');
+            generateEmailList(currentPage); // Regenerate the email list after deletion
+        } else {
+            console.error('Failed to delete user:', response.statusText);
+            // Handle error if needed
+        }
+    })
+    .catch(error => {
+        console.error('Error deleting user:', error);
+        // Handle error if needed
+    });
+}
+
+
+
+
+        // Function to search emails
+        function searchEmails() {
+            // Implement search logic here
+            generateEmailList(currentPage); // Regenerate the email list for the current page
+        }
+
+        // Function to update pagination buttons
+        function updatePagination(current) {
+            const totalPages = Math.ceil(totalEmails / PAGE_SIZE);
+            const paginationContainer = document.getElementById('pagination');
+            paginationContainer.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const button = document.createElement('button');
+                button.textContent = i;
+                button.onclick = () => {
+                    currentPage = i;
+                    generateEmailList(currentPage);
+                };
+                if (i === current) {
+                    button.classList.add('active');
+                }
+                paginationContainer.appendChild(button);
+            }
+        }
+
+        // Call the function to generate the email list when the page loads
+        window.onload = () => generateEmailList(currentPage);
+    </script>
+</body>
+
+</html>
