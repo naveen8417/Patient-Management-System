@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/">
+
+<head>
+    <title>Doctor Registration</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        /* Optional: Custom CSS for styling */
+        .custom-form-group {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header bg-primary text-white text-center">
+                <h3> DOCTOR REGISTRATION PAGE </h3>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/doctor/save}" method="POST" id="registerForm" class="needs-validation" novalidate>
+                    <div class="form-row custom-form-group">
+                        <div class="col">
+                            <input type="text" name="doctorid" class="form-control" placeholder="Doctor Id" required />
+                        </div>
+                        <div class="col">
+                            <input type="text" name="doctorname" id="doctorname" class="form-control" placeholder="Name" required autocomplete="name" />
+                        </div>
+                        <div class="col">
+                            <input type="email" name="email" id="email" class="form-control" placeholder="Email" required autocomplete="email" />
+                        </div>
+                    </div>
+                    <div class="form-row custom-form-group">
+                        <div class="col">
+                            <input type="text" name="phoneno" id="phone" class="form-control" placeholder="Phone Number" required pattern="[0-9]{10}" autocomplete="tel" />
+                            <div class="invalid-feedback">Please enter a valid 10-digit phone number.</div>
+                        </div>
+                        <div class="col">
+                            <input type="text" name="address" id="address" class="form-control" placeholder="Address" required autocomplete="address-line1" />
+                        </div>
+                    </div>
+                    <div class="form-row custom-form-group">
+                        <div class="col">
+                            <input type="text" name="about" id="about" class="form-control" placeholder="SPECIALISATION" required />
+                        </div>
+                    </div>
+                    <div class="form-row custom-form-group">
+                        <div class="col">
+                            <input type="text" id="id" name="id" class="form-control" placeholder="Patient id" required />
+                        </div>
+                        <div class="col">
+                            <input type="text" id="patientname" name="patientname" class="form-control" placeholder="Patient Name" autocomplete="patientName" />
+                        </div>
+                        <div class="col">
+                            <input type="text" id="patientage" name="patientage" class="form-control" placeholder="Patient Age" required />
+                        </div>
+                        <div class="col">
+                            <input type="text" id="bloodgroup" name="bloodgroup" class="form-control" placeholder="Blood Group" required />
+                        </div>
+                    </div>
+                    <div class="form-row custom-form-group">
+                        <div class="col">
+                            <input type="text" name="BP" class="form-control" placeholder="Blood Pressure" required />
+                        </div>
+                        <div class="col">
+                            <input type="text" name="sugar" class="form-control" placeholder="Sugar Level" required />
+                        </div>
+                        <div class="col">
+                            <input type="text" name="disease" class="form-control" id="disease" placeholder="Disease" required />
+                        </div>
+                    </div>
+                    <div class="form-row custom-form-group">
+                        <div class="col">
+                            <textarea name="healthcondition" class="form-control" placeholder="Health Condition" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    <div class="form-row custom-form-group">
+                        <div class="col">
+                            <textarea name="precaution" class="form-control" placeholder="Precaution" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    <div class="form-row custom-form-group">
+                        <div class="col">
+                            <button type="button" class="btn btn-danger" style="width: 70px; height: 40px;" onclick="closePopup()">Exit</button>
+                        </div>
+                        <div class="col">
+                            <input type="submit" value="Create" class="btn btn-info" style="width: 70px; height: 40px;" disabled />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer bg-success text-center text-white" th:if="${message}">
+                [[${message}]]
+            </div>
+        </div>
+        <!--card ends-->
+    </div>
+  <script th:inline="javascript">
+    function closePopup() {
+        // Close the popup window
+        window.close();
+    }
+
+    (function() {
+        'use strict';
+
+        var form = document.getElementById('registerForm');
+        var createButton = document.querySelector('input[type="submit"]');
+
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            form.classList.add('was-validated');
+        }, false);
+
+        var inputFields = document.querySelectorAll('input, textarea');
+        inputFields.forEach(function(input) {
+            input.addEventListener('input', function() {
+                var isValid = form.checkValidity();
+                createButton.disabled = !isValid;
+            });
+        });
+
+        // Add event listener for input change on patientId field
+        document.getElementById('id').addEventListener('input', function() {
+            var patientId = this.value;
+
+            fetch('http://localhost:8888/patient/register/' + patientId)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(patientsArray => {
+                    if (patientsArray.length > 0) {
+                        var patient = patientsArray[0]; // Accessing the first element assuming there's only one patient
+                        console.log('Fetched patient details:', patient);
+
+                        // Set values of input fields
+                        document.getElementById('patientname').value = patient.patientName;
+                        document.getElementById('patientage').value = patient.age;
+                        document.getElementById('bloodgroup').value = patient.bloodGroup;
+                          document.getElementById('disease').value = patient.disease;
+
+                    } else {
+                        console.error('No patient details found for the given ID.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching patient details:', error);
+                });
+        });
+    })();
+
+   document.querySelector('input[name="doctorid"]').addEventListener('input', function() {
+    var doctorId = this.value;
+
+    fetch('http://localhost:8888/doctors/register/' + doctorId)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(doctorsArray => {
+            if (doctorsArray.length > 0) {
+                var doctor = doctorsArray[0]; // Accessing the first element assuming there's only one doctor
+                console.log('Fetched doctor details:', doctor);
+
+                // Set values of input fields
+                document.getElementById('doctorname').value = doctor.doctorname;
+                document.getElementById('phone').value = doctor.doctorphoneno;
+                document.getElementById('about').value = doctor.specialisation;
+                document.getElementById('address').value = doctor.address;
+                  document.getElementById('email').value = doctor.doctoremail;
+                
+                var createButton = document.querySelector('button[type="submit"]');
+                if (doctor.availability === 'NOTAVAILABLE') {
+                    document.getElementById('bookAppointmentWarning').style.display = 'block';
+                    createButton.disabled = true;
+                } else {
+                    document.getElementById('bookAppointmentWarning').style.display = 'none';
+                    createButton.disabled = false;
+                }
+            } else {
+                console.error('No doctor details found for the given ID.');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching doctor details:', error);
+        });
+});
+
+</script>
+
+
+</body>
+
+</html>

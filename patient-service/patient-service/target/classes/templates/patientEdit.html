@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/">
+
+<head>
+    <title>Patient Edit Page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        /* Customize scrollbar */
+        .modal-body {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+        body{
+			background-color: white;
+		}
+    </style>
+</head>
+
+<body>
+
+    <!-- Modal -->
+    <div class="modal fade" id="editPatientModal" tabindex="-1" role="dialog" aria-labelledby="editPatientModalLabel"
+        aria-hidden="true" >
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white" style="background-color: white;">
+                    <h5 class="modal-title" id="editPatientModalLabel">PATIENT EDIT PAGE</h5>
+                </div>
+                <div class="modal-body" style="background-color: white;">
+<form th:action="@{/patient/update}" method="POST" th:object="${patient}" style="background-color: white;">
+    <div class="row">
+        <!-- Left Column -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id">ID:</label>
+                <input type="text" th:field="*{id}" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label for="patientName">NAME:</label>
+                <input type="text" th:field="*{patientName}" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label>GENDER:</label><br/>
+                <input type="radio" th:field="*{patientGen}" value="Male" /> Male 
+                <input type="radio" th:field="*{patientGen}" value="Female" /> Female
+            </div>
+            <div class="form-group">
+                <label for="disease">DISEASE:</label>
+                <input type="text" th:field="*{disease}" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="bloodGroup">BLOOD GROUP:</label>
+                <input type="text" th:field="*{bloodGroup}" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="email">EMAIL:</label>
+                <input type="text" th:field="*{email}" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label for="phoneno">PHONENO:</label>
+                <input type="text" th:field="*{phoneno}" class="form-control" pattern="[0-9]{10}" title="Please enter a 10-digit phone number." read only />
+            </div>
+            <div class="form-group">
+                <label for="dob">DOB:</label>
+                <input type="text" th:field="*{dob}" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="age">AGE:</label>
+                <input type="text" th:field="*{age}" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="guardianName">GUARDIAN NAME:</label>
+                <input type="text" th:field="*{guardianName}" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="guardianPhone">GUARDIAN PHONE:</label>
+                <input type="text" th:field="*{guardianPhone}" class="form-control" pattern="[0-9]{10}" title="Please enter a 10-digit phone number." required />
+            </div>
+             <div class="form-group">
+                <label for="bookingDate">BOOKING DATE:</label>
+                <input type="text" th:field="*{bookingDate}" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="appointmentTime">APPOINTMENT TIME:</label>
+                <input type="text" th:field="*{appointmentTime}" class="form-control" required />
+            </div>
+        </div>
+        <!-- Right Column -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="currentStreet">CURRENT STREET:</label>
+                <input type="text" th:field="*{currentStreet}" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="currentVillage">CURRENT VILLAGE:</label>
+                <input type="text" th:field="*{currentVillage}" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="currentPostOffice">CURRENT POST OFFICE:</label>
+                <input type="text" th:field="*{currentPostOffice}" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="currentDistrict">CURRENT DISTRICT:</label>
+                <input type="text" th:field="*{currentDistrict}" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="currentCountry">CURRENT COUNTRY:</label>
+                <input type="text" th:field="*{currentCountry}" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="currentPincode">CURRENT PINCODE:</label>
+                <input type="text" th:field="*{currentPincode}" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="permanentStreet">PERMANENT STREET:</label>
+                <input type="text" th:field="*{permanentStreet}" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="permanentVillage">PERMANENT VILLAGE:</label>
+                <input type="text" th:field="*{permanentVillage}" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="permanentPostOffice">PERMANENT POST OFFICE:</label>
+                <input type="text" th:field="*{permanentPostOffice}" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="permanentDistrict">PERMANENT DISTRICT:</label>
+                <input type="text" th:field="*{permanentDistrict}" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="permanentCountry">PERMANENT COUNTRY:</label>
+                <input type="text" th:field="*{permanentCountry}" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="permanentPincode">PERMANENT PINCODE:</label>
+                <input type="text" th:field="*{permanentPincode}" class="form-control" required />
+            </div>
+           
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+</form>
+
+
+
+                </div>
+                <div class="modal-footer">
+                     <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="redirectToPatientList()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Automatically show modal when page loads
+        $(document).ready(function () {
+            $('#editPatientModal').modal('show');
+        });
+    </script>
+    <script>
+        // Redirect to patientlist.html when the modal is closed
+        function redirectToPatientList() {
+            window.location.href = "http://localhost:8888/patient/";
+        }
+    </script>
+
+</body>
+
+</html>

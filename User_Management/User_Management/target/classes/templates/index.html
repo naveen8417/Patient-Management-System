@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slot and Time Booking</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f0f8ff;
+        }
+        .container {
+            margin-top: 50px;
+            position: relative;
+        }
+        .btn-back {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #000;
+        }
+        .btn-back svg {
+            fill: #fff;
+        }
+        h2 {
+            color: #1e90ff; /* Changed to light sky blue */
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        label {
+            font-weight: bold;
+        }
+        button[type="submit"] {
+            background-color: #1e90ff; /* Changed to light sky blue */
+            border-color: #1e90ff; /* Changed to light sky blue */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="http://localhost:8888/disease/" class="btn btn-dark btn-back">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M11.354 5.354a.5.5 0 0 1 0 .708L7.707 9l3.647 3.646a.5.5 0 0 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 0 1 .708 0z"/>
+            </svg> Back
+        </a>
+           
+        <h2>Slot and Time Booking</h2>
+        <form id="registerForm" action="/user/createUser" method="post">
+            <div class="form-row">
+               <div class="form-group col-md-6">
+                <label for="doctorid">Doctor ID:</label>
+                <input type="text" class="form-control" id="doctorid" name="doctorid" placeholder="Enter Doctor ID" required>
+                <!-- Message for Doctor ID -->
+                <small id="doctoridHelp" class="form-text text-muted">If you don't know the Doctor ID, <a href="http://localhost:8888/doctors/list">click here</a> to view the doctor list.</small>
+            </div>
+                <div class="form-group col-md-6">
+                    <label for="doctorName">Doctor Name:</label>
+                    <input type="text" class="form-control" id="doctorName" name="doctorName" placeholder="Enter Doctor Name" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="specialization">Specialization:</label>
+                    <input type="text" class="form-control" id="specialization" name="specialization" placeholder="Enter Specialization" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="phone">Phone Number:</label>
+                    <input type="tel" class="form-control" id="phoneno" name="phoneno" placeholder="Enter Phone Number" required>
+                </div>
+                  <div class="form-group col-md-6">
+                    <label for="phone">Availability:</label>
+                    <input type="tel" class="form-control" id="availability" name="availability"  required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="id">Patient ID:</label>
+                    <input type="text" id="id" name="id" class="form-control" placeholder="Patient ID" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="patientname">Patient Name:</label>
+                    <input type="text" id="patientname" name="patientName" class="form-control" placeholder="Patient Name" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Enter Email" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="phoneno">Phone Number:</label>
+                    <input type="tel" id="phoneNo" name="phoneNo" class="form-control" placeholder="Enter Phone Number" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="date">Date:</label>
+                   <input type="date" class="form-control" id="date" name="date" required min="2024-04-15">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="slot">Select Slot:</label>
+                    <select class="form-control" id="slot" name="slot" required>
+                        <option value="">Select Slot</option>
+                        <option value="09:00 AM">09:00 AM</option>
+                        <option value="10:00 AM">10:00 AM</option>
+                        <option value="11:00 AM">11:00 AM</option>
+                        <option value="12:00 PM">12:00 PM</option>
+                        <option value="01:00 PM">01:00 PM</option>
+                        <option value="02:00 PM">02:00 PM</option>
+                        <option value="03:00 PM">03:00 PM</option>
+                        <option value="04:00 PM">04:00 PM</option>
+                        <option value="05:00 PM">05:00 PM</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Book Appointment</button>
+        </form>
+        <div id="bookAppointmentWarning" style="color: red;"></div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+
+    <script>
+(function() {
+    'use strict';
+
+    var form = document.getElementById('registerForm');
+    var createButton = document.querySelector('input[type="submit"]');
+
+    form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        form.classList.add('was-validated');
+    }, false);
+
+    var inputFields = document.querySelectorAll('input, textarea');
+    inputFields.forEach(function(input) {
+        input.addEventListener('input', function() {
+            var isValid = form.checkValidity();
+            createButton.disabled = !isValid;
+        });
+    });
+
+    // Add event listener for input change on patientId field
+    document.getElementById('id').addEventListener('input', function() {
+        var patientId = this.value;
+
+        fetch('http://localhost:8888/patient/register/' + patientId)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(patientsArray => {
+                if (patientsArray.length > 0) {
+                    var patient = patientsArray[0]; // Accessing the first element assuming there's only one patient
+                    console.log('Fetched patient details:', patient);
+
+                    // Set values of input fields
+                    document.getElementById('patientname').value = patient.patientName;
+                    document.getElementById('email').value = patient.email;
+                    document.getElementById('phoneNo').value = patient.phoneno;
+
+                } else {
+                    console.error('No patient details found for the given ID.');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching patient details:', error);
+            });
+    });
+
+    document.getElementById('doctorid').addEventListener('input', function() {
+        var doctorId = this.value;
+
+        fetch('http://localhost:8888/doctors/register/' + doctorId)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(doctorsArray => {
+                if (doctorsArray.length > 0) {
+                    var doctor = doctorsArray[0]; // Accessing the first element assuming there's only one doctor
+                    console.log('Fetched doctor details:', doctor);
+
+                    // Set values of input fields
+                    document.getElementById('doctorName').value = doctor.doctorname;
+                    document.getElementById('phoneno').value = doctor.doctorphoneno;
+                    document.getElementById('specialization').value = doctor.specialisation;
+                    document.getElementById('availability').value = doctor.availability;
+                        var createButton = document.querySelector('button[type="submit"]');
+                if (doctor.availability === 'NOTAVAILABLE') {
+                   document.getElementById('bookAppointmentWarning').style.display = 'block';
+                    createButton.disabled = true;
+                } else {
+                  document.getElementById('bookAppointmentWarning').style.display = 'block';
+                    createButton.disabled = false;
+                }
+
+                } else {
+                    console.error('No doctor details found for the given ID.');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching doctor details:', error);
+            });
+    });
+})();
+(function() {
+    'use strict';
+
+    // Get today's date in YYYY-MM-DD format
+    var today = new Date().toISOString().split('T')[0];
+
+    // Set the min attribute of the date input to today's date
+    document.getElementById('date').setAttribute('min', today);
+
+    // Rest of your JavaScript code...
+})();
+
+
+    </script>
+</body>
+</html>

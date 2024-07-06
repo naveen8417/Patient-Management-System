@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/">
+
+<head>
+    <title>Register Page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        /* Optional: Custom CSS for styling */
+        .custom-form-group {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header bg-primary text-white text-center">
+                <h3> PATIENT REGISTER PAGE </h3>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/patient/save}" method="POST" id="registerForm" class="needs-validation" novalidate>
+                    <div class="form-row custom-form-group">
+                        <div class="col">
+                            <input type="text" name="patientName" class="form-control" placeholder="Name" required />
+                        </div>
+                        <div class="col">
+                            <input type="radio" name="patientGen" value="Male" required />
+                            <label for="male">Male</label>
+                            <input type="radio" name="patientGen" value="Female" required />
+                            <label for="female">Female</label>
+                        </div>
+                    </div>
+
+                    <div class="form-row custom-form-group">
+                        <div class="col">
+                            <input type="text" name="disease" class="form-control" placeholder="Disease" required />
+                        </div>
+                        <div class="col">
+                            <select name="bloodGroup" class="form-control" required>
+                                <option value="">Select Blood Group</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                            </select>
+                        </div>
+                    </div>
+                     <div class="form-row custom-form-group">
+                        <div class="col">
+                            Date of Birth: <input id="dob" type="date" name="dob" class="form-control" placeholder="Date of Birth" required max="<?php echo date('Y-m-d'); ?>" onchange="calculateAge()" />
+                        </div>
+                        <div class="col">
+                            Age as of today: <input type="text" id="age" name="age" class="form-control" placeholder="Age" readonly />
+                        </div>
+                    </div>
+                   <div class="form-row custom-form-group">
+    <div class="col">
+        <input type="email" name="email" id="email" class="form-control" placeholder="Email" required />
+        <div class="invalid-feedback">Please enter a valid email address.</div>
+    </div>
+    <div class="col">
+        <input type="text" name="phoneno" id="phoneno" class="form-control" placeholder="Phone Number" required pattern="[0-9]{10}" />
+        <div class="invalid-feedback">Please enter a 10-digit phone number.</div>
+    </div>
+</div>
+
+                    <!-- More form fields... -->
+                    <!-- Remaining form fields -->
+<div class="form-row custom-form-group">
+    <div class="col">
+        <input type="text" name="guardianName" id="guardianName" class="form-control" placeholder="Father/Husband/Guardian Name" required />
+    </div>
+    <div class="col">
+        <input type="text" name="guardianPhone" id="guardianPhone" class="form-control" placeholder="Guardian's Phone Number" required pattern="[0-9]{10}" />
+        <div class="invalid-feedback">Please enter a valid 10-digit phone number.</div>
+        <div class="required-feedback" style="display: none;">Guardian's phone number is required.</div>
+    </div>
+</div>
+
+
+
+
+<div class="form-row custom-form-group">
+    <div class="col">
+        <input type="text" id="currentStreet" name="currentStreet" class="form-control" placeholder="House no. and Street" required />
+    </div>
+    <div class="col">
+        <input type="text" id="currentVillage" name="currentVillage" class="form-control" placeholder="Post office" required />
+    </div>
+</div>
+
+<div class="form-row custom-form-group">
+    <div class="col">
+        <input type="text" id="currentPostOffice" name="currentPostOffice" class="form-control" placeholder="District" required />
+    </div>
+    <div class="col">
+        <input type="text" id="currentDistrict" name="currentDistrict" class="form-control" placeholder="State" required />
+    </div>
+</div>
+
+<div class="form-row custom-form-group">
+    <div class="col">
+        <input type="text" id="currentCountry" name="currentCountry" class="form-control" placeholder="Country (Current)" required />
+    </div>
+    <div class="col">
+        <input type="text" id="currentPincode" name="currentPincode" class="form-control" placeholder="Pincode (Current)" required />
+    </div>
+</div>
+
+<div class="form-check">
+    <input type="checkbox" id="sameAsCurrent" class="form-check-input" />
+    <label for="sameAsCurrent" class="form-check-label">Same as Current Address</label>
+</div>
+
+<div class="form-row custom-form-group">
+    <div class="col">
+        <input type="text" id="permanentStreet" name="permanentStreet" class="form-control" placeholder="House no. and Street" required />
+    </div>
+    <div class="col">
+        <input type="text" id="permanentVillage" name="permanentVillage" class="form-control" placeholder="Post office" required />
+    </div>
+</div>
+
+<div class="form-row custom-form-group">
+    <div class="col">
+        <input type="text" id="permanentPostOffice" name="permanentPostOffice" class="form-control" placeholder="District" required />
+    </div>
+    <div class="col">
+        <input type="text" id="permanentDistrict" name="permanentDistrict" class="form-control" placeholder="State" required />
+    </div>
+</div>
+
+<div class="form-row custom-form-group">
+    <div class="col">
+        <input type="text" id="permanentCountry" name="permanentCountry" class="form-control" placeholder="Country (Permanent)" required />
+    </div>
+    <div class="col">
+        <input type="text" id="permanentPincode" name="permanentPincode" class="form-control" placeholder="Pincode (Permanent)" required />
+    </div>
+</div>
+
+<div class="form-row custom-form-group">
+    <div class="col">
+        Appointment Date <input id="bookingDate" type="date" name="bookingDate" class="form-control" placeholder="Date of Booking" required min="<?php echo date('Y-m-d'); ?>" />
+    </div>
+    <div class="col">
+        Appointment Time: <select id="appointmentTime" name="appointmentTime" class="form-control" required>
+            <option value="">Select Time</option>
+            <option value="09:00">9:00 AM</option>
+            <option value="10:00">10:00 AM</option>
+            <option value="17:00">5:00 PM</option>
+            <option value="18:00">6:00 PM</option>
+        </select>
+    </div>
+</div>
+
+
+                    
+                   
+
+                    <!-- Add other form fields -->
+
+                    <div class="form-row custom-form-group">
+                        <div class="col">
+                            <button class="btn btn-danger" style="width: 70px; height: 40px;" onclick="closePopup()">Exit</button>
+                        </div>
+                        <div class="col">
+                            <input type="submit" value="Create" class="btn btn-info" style="width: 70px; height: 40px;" disabled />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer bg-success text-center text-white" th:if="${message}">
+                [[${message}]]
+            </div>
+        </div>
+        <!--card ends-->
+    </div>
+
+    <script th:inline="javascript">
+        function closePopup() {
+            // Close the popup window
+            window.close();
+        }
+
+        function calculateAge() {
+            var dob = new Date(document.getElementById('dob').value);
+            var today = new Date();
+            var age = today.getFullYear() - dob.getFullYear();
+            var m = today.getMonth() - dob.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+            document.getElementById('age').value = age;
+        }
+
+        (function() {
+            'use strict';
+
+            var form = document.getElementById('registerForm');
+            var createButton = document.querySelector('input[type="submit"]');
+
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+
+                form.classList.add('was-validated');
+            }, false);
+
+            var inputFields = document.querySelectorAll('input, select');
+            inputFields.forEach(function(input) {
+                input.addEventListener('input', function() {
+                    var isValid = form.checkValidity();
+                    createButton.disabled = !isValid;
+                });
+            });
+
+            // Disable past dates for appointment
+            var bookingDateInput = document.getElementById('bookingDate');
+            bookingDateInput.min = new Date().toISOString().split("T")[0];
+
+            // Disable future dates for date of birth
+            var dobInput = document.getElementById('dob');
+            dobInput.max = new Date().toISOString().split("T")[0];
+        })();
+    </script>
+    
+
+<script>
+    document.getElementById('sameAsCurrent').addEventListener('change', function() {
+        if (this.checked) {
+            document.getElementById('permanentStreet').value = document.getElementById('currentStreet').value;
+            document.getElementById('permanentVillage').value = document.getElementById('currentVillage').value;
+            document.getElementById('permanentPostOffice').value = document.getElementById('currentPostOffice').value;
+            document.getElementById('permanentDistrict').value = document.getElementById('currentDistrict').value;
+            document.getElementById('permanentCountry').value = document.getElementById('currentCountry').value;
+            document.getElementById('permanentPincode').value = document.getElementById('currentPincode').value;
+        } else {
+            // If unchecked, clear the fields or do something else
+        }
+    });
+    document.getElementById('registerForm').addEventListener('submit', function(event) {
+    // Check if email is valid
+    var emailInput = document.getElementById('email');
+    if (!emailInput.validity.valid) {
+        emailInput.classList.add('is-invalid');
+        event.preventDefault(); // Prevent form submission
+    } else {
+        emailInput.classList.remove('is-invalid');
+    }
+
+    // Check if phone number is valid
+    var phoneInput = document.getElementById('phoneno');
+    if (!phoneInput.validity.valid) {
+        phoneInput.classList.add('is-invalid');
+        event.preventDefault(); // Prevent form submission
+    } else {
+        phoneInput.classList.remove('is-invalid');
+    }
+});
+// Get the guardian phone number input element
+var guardianPhoneInput = document.getElementById('guardianPhone');
+
+// Add event listener to detect when the input field loses focus
+guardianPhoneInput.addEventListener('blur', function() {
+    if (guardianPhoneInput.validity.valueMissing) {
+        showRequiredFeedback();
+    } else {
+        hideRequiredFeedback();
+    }
+});
+
+// Add event listener to detect form submission
+document.getElementById('registerForm').addEventListener('submit', function(event) {
+    if (guardianPhoneInput.validity.valueMissing) {
+        showRequiredFeedback();
+        event.preventDefault(); // Prevent form submission
+    }
+});
+
+// Function to show the required feedback message
+function showRequiredFeedback() {
+    var requiredFeedback = document.querySelector('#guardianPhone + .required-feedback');
+    requiredFeedback.style.display = 'block';
+}
+
+// Function to hide the required feedback message
+function hideRequiredFeedback() {
+    var requiredFeedback = document.querySelector('#guardianPhone + .required-feedback');
+    requiredFeedback.style.display = 'none';
+}
+
+
+
+</script>
+</body>
+
+</html>
